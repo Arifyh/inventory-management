@@ -5,7 +5,9 @@ import {
   PackageSearch, 
   ArrowRightLeft, 
   Tags,
-  Users
+  Users,
+  Truck,
+  History
 } from 'lucide-react';
 
 export default function useDashboardScreen() {
@@ -34,10 +36,12 @@ export default function useDashboardScreen() {
   };
 
   const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: PackageSearch, label: 'Produk', path: '/dashboard/products' },
-    { icon: ArrowRightLeft, label: 'Transaksi', path: '/dashboard/transactions' },
-    { icon: Tags, label: 'Kategori', path: '/dashboard/categories' },
+    { label: 'Ringkasan', icon: LayoutDashboard, path: '/dashboard', active: location.pathname === '/dashboard' },
+    { label: 'Katalog Produk', icon: PackageSearch, path: '/dashboard/products', active: location.pathname === '/dashboard/products' },
+    { label: 'Kategori', icon: Tags, path: '/dashboard/categories', active: location.pathname === '/dashboard/categories' },
+    { label: 'Supplier', icon: Truck, path: '/dashboard/suppliers', active: location.pathname === '/dashboard/suppliers' },
+    { label: 'Transaksi', icon: ArrowRightLeft, path: '/dashboard/transactions', active: location.pathname === '/dashboard/transactions' },
+    { label: 'Riwayat', icon: History, path: '/dashboard/history', active: location.pathname === '/dashboard/history' },
   ];
 
   if (user?.role === 'ADMIN') {

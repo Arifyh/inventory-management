@@ -7,6 +7,8 @@ import Topbar from '../../components/layout/Topbar';
 import DashboardHome from './DashboardHome';
 import UserManagement from './users/UserManagement';
 import CategoryManagement from './categories/CategoryManagement';
+import SupplierManagement from './suppliers/SupplierManagement';
+import ProductManagement from './products/ProductManagement';
 
 export default function Dashboard() {
   const {
@@ -39,6 +41,8 @@ export default function Dashboard() {
             <Route path="/" element={<DashboardHome user={user} />} />
             <Route path="/users" element={<UserManagement />} />
             <Route path="/categories" element={<CategoryManagement />} />
+            <Route path="/suppliers" element={<SupplierManagement />} />
+            <Route path="/products" element={<ProductManagement />} />
           </Routes>
         </div>
       </main>
