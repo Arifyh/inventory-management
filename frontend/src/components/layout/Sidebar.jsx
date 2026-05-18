@@ -7,9 +7,10 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, navItems, use
   return (
     <aside 
       className={`${
-        isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-0'
-      } fixed inset-y-0 left-0 z-50 bg-[#0d0d0d] text-white transition-all duration-300 ease-in-out md:relative flex flex-col font-sans border-r border-white/10`}
+        isSidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full'
+      } fixed inset-y-0 left-0 z-50 bg-[#0d0d0d] text-white transition-all duration-300 ease-in-out md:relative font-sans border-r border-white/10 overflow-hidden whitespace-nowrap`}
     >
+      <div className="w-64 h-full flex flex-col">
       <div className="p-8 flex items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 flex items-center justify-center">
@@ -55,7 +56,9 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, navItems, use
             {user?.email ? user.email.charAt(0).toUpperCase() : 'U'}
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="text-xs font-bold text-white truncate tracking-wider">{user?.email}</p>
+            <p className="text-xs font-bold text-white truncate tracking-wider">
+              {user?.role === 'ADMIN' ? 'Administrator' : (user?.name || user?.email)}
+            </p>
             <p className="text-[10px] text-[#c8b89a] uppercase tracking-[0.1em] mt-1">{user?.role}</p>
           </div>
         </div>
@@ -66,6 +69,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, navItems, use
           <LogOut className="w-4 h-4" />
           <span>Keluar</span>
         </button>
+      </div>
       </div>
     </aside>
   );

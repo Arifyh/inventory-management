@@ -49,12 +49,12 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, name: user.name, role: user.role },
       process.env.JWT_SECRET || 'supersecret',
       { expiresIn: '1d' }
     );
 
-    res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
+    res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in', error: error.message });
   }

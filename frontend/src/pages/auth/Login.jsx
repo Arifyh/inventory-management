@@ -99,25 +99,20 @@ export default function LoginScreen() {
           {/* Badge */}
           <div className="mb-8 inline-flex items-center gap-2 border border-[#8b6914]/20 bg-[#8b6914]/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#8b6914]">
             <div className="h-1.5 w-1.5 rounded-full bg-[#8b6914]" />
-            Admin Access
+            Admin & Staff Access
           </div>
 
           {/* Header */}
           <div className="mb-12">
-            <div className="mb-4 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.28em] text-[#8b6914]">
-              <div className="h-px w-6 bg-[#8b6914]" />
-              Masuk ke panel
-            </div>
-
-            <h2 className="mb-3 text-5xl font-light leading-none text-[#0d0d0d]">
+            <h2 className="mb-3 text-5xl font-medium leading-none text-[#0d0d0d]">
               Selamat
               <br />
               Datang Kembali
             </h2>
 
             <p className="text-sm leading-7 text-[#6b6456]">
-              Masukkan kredensial admin Anda untuk mengakses dashboard
-              pengelolaan website Ikonik.
+              Masukkan kredensial Anda untuk mengakses <br />
+              Dashboard Inventory Ikonik.
             </p>
           </div>
 
@@ -133,7 +128,7 @@ export default function LoginScreen() {
             {/* EMAIL */}
             <div className="mb-7">
               <label className="mb-3 block text-[10px] font-bold uppercase tracking-[0.2em] text-[#6b6456]">
-                Alamat Email
+                Email
               </label>
 
               <div className="relative">

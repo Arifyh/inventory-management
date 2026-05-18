@@ -13,14 +13,9 @@ export default function DashboardHome({ user }) {
           Ringkasan Utama
         </div>
         <h2 className="text-4xl font-light text-[#0d0d0d] mb-4">
-          Selamat Datang, <br />
-          <span className="font-bold">{user.email}</span>
+          Selamat Datang,
+          <span className="font-medium"> {user.role === 'ADMIN' ? 'Admin' : (user.name || user.email)}</span>
         </h2>
-        <p className="text-[#6b6456] max-w-xl text-sm leading-relaxed">
-          Anda masuk sebagai {user.role}. Di sini Anda bisa memantau dan
-          mengelola semua aktivitas inventaris, pergerakan barang, dan
-          ketersediaan stok material bangunan Ikonik.
-        </p>
       </div>
 
       {/* Stat Cards */}
