@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { LogOut, PackageSearch, X } from 'lucide-react';
 
 export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, navItems, user, handleLogout }) {
+  const navigate = useNavigate();
   return (
     <aside 
       className={`${
@@ -33,6 +35,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, navItems, use
           {navItems.map((item, index) => (
             <button
               key={index}
+              onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-sm transition-all text-sm tracking-wide ${
                 item.active 
                   ? 'bg-[#8b6914]/10 text-[#8b6914] font-medium border-l-[3px] border-[#8b6914]' 
