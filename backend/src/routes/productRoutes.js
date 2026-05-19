@@ -4,12 +4,16 @@ const productController = require('../controllers/productController');
 const { authenticate, authorize } = require('../middlewares/auth');
 const upload = require('../middlewares/upload');
 
-// Admin routes
+// Require authentication for all routes
 router.use(authenticate);
+
+// Staff and Admin can view products
+router.get('/', authorize(['ADMIN', 'STAFF']), productController.getProducts);
+router.get('/:id', authorize(['ADMIN', 'STAFF']), productController.getProductById);
+
+// Admin-only write routes
 router.use(authorize(['ADMIN']));
 
-router.get('/', productController.getProducts);
-router.get('/:id', productController.getProductById);
 router.post('/', productController.createProduct);
 router.put('/:id', productController.updateProduct);
 router.delete('/:id', productController.softDeleteProduct);

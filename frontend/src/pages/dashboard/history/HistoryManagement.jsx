@@ -36,6 +36,8 @@ export default function HistoryManagement() {
     resetFilters
   } = useHistoryManagement();
 
+  const userRole = JSON.parse(localStorage.getItem('user'))?.role;
+
   if (loading) return <div className="p-8 text-[#6b6456]">Memuat data riwayat...</div>;
   if (error) return <div className="p-8 text-red-500">{error}</div>;
 
@@ -71,14 +73,16 @@ export default function HistoryManagement() {
           </p>
         </div>
         
-        <div className="flex items-center gap-3 print:hidden">
-          <button
-            onClick={handlePrint}
-            className="flex items-center gap-2 bg-[#f5f0e8] text-[#0d0d0d] border border-[#0d0d0d]/20 px-4 py-2.5 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#0d0d0d]/5 transition-all"
-          >
-            <Printer className="w-4 h-4" /> Cetak Laporan
-          </button>
-        </div>
+        {userRole === 'ADMIN' && (
+          <div className="flex items-center gap-3 print:hidden">
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 bg-[#f5f0e8] text-[#0d0d0d] border border-[#0d0d0d]/20 px-4 py-2.5 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#0d0d0d]/5 transition-all"
+            >
+              <Printer className="w-4 h-4" /> Cetak Laporan
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Summary Cards */}

@@ -27,6 +27,7 @@ export default function ProductManagement() {
   } = useProductManagement();
 
   const fileInputRef = useRef(null);
+  const userRole = JSON.parse(localStorage.getItem('user'))?.role;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -39,12 +40,14 @@ export default function ProductManagement() {
           <h2 className="text-3xl font-light text-[#0d0d0d]">Manajemen Produk</h2>
         </div>
         
-        <button
-          onClick={() => openModal()}
-          className="flex items-center gap-2 bg-[#0d0d0d] text-white px-5 py-3 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#8b6914] transition-colors"
-        >
-          <Plus className="w-4 h-4" /> Tambah Produk
-        </button>
+        {userRole === 'ADMIN' && (
+          <button
+            onClick={() => openModal()}
+            className="flex items-center gap-2 bg-[#0d0d0d] text-white px-5 py-3 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#8b6914] transition-colors"
+          >
+            <Plus className="w-4 h-4" /> Tambah Produk
+          </button>
+        )}
       </div>
 
       {loading && <div className="p-8 text-[#6b6456]">Memuat data...</div>}
@@ -59,7 +62,7 @@ export default function ProductManagement() {
                 <th className="px-6 py-4 font-bold">Kategori</th>
                 <th className="px-6 py-4 font-bold">Stok</th>
                 <th className="px-6 py-4 font-bold">Status</th>
-                <th className="px-6 py-4 font-bold text-right">Aksi</th>
+                {userRole === 'ADMIN' && <th className="px-6 py-4 font-bold text-right">Aksi</th>}
               </tr>
             </thead>
             <tbody>
@@ -94,47 +97,63 @@ export default function ProductManagement() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <button 
-                        onClick={() => handleTogglePublish(p.id)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] rounded-sm border transition-colors ${
+                      {userRole === 'ADMIN' ? (
+                        <button 
+                          onClick={() => handleTogglePublish(p.id)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] rounded-sm border transition-colors ${
+                            p.isPublished 
+                              ? 'bg-green-50 border-green-200 text-green-700 hover:bg-red-50 hover:text-red-700 hover:border-red-200' 
+                              : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-green-50 hover:text-green-700 hover:border-green-200'
+                          }`}
+                          title={p.isPublished ? "Klik untuk Unpublish" : "Klik untuk Publish"}
+                        >
+                          {p.isPublished ? (
+                            <><CheckCircle2 className="w-3 h-3" /> Publik</>
+                          ) : (
+                            <><XCircle className="w-3 h-3" /> Draft</>
+                          )}
+                        </button>
+                      ) : (
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] rounded-sm border ${
                           p.isPublished 
-                            ? 'bg-green-50 border-green-200 text-green-700 hover:bg-red-50 hover:text-red-700 hover:border-red-200' 
-                            : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-green-50 hover:text-green-700 hover:border-green-200'
-                        }`}
-                        title={p.isPublished ? "Klik untuk Unpublish" : "Klik untuk Publish"}
-                      >
-                        {p.isPublished ? (
-                          <><CheckCircle2 className="w-3 h-3" /> Publik</>
-                        ) : (
-                          <><XCircle className="w-3 h-3" /> Draft</>
-                        )}
-                      </button>
+                            ? 'bg-green-50 border-green-200 text-green-700' 
+                            : 'bg-slate-100 border-slate-200 text-slate-500'
+                        }`}>
+                          {p.isPublished ? (
+                            <><CheckCircle2 className="w-3 h-3" /> Publik</>
+                          ) : (
+                            <><XCircle className="w-3 h-3" /> Draft</>
+                          )}
+                        </span>
+                      )}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => openImageModal(p)}
-                        className="p-2 text-[#6b6456] hover:text-[#8b6914] transition-colors inline-block relative"
-                        title="Kelola Foto"
-                      >
-                        <ImageIcon className="w-4 h-4" />
-                        {p.images?.length > 0 && (
-                          <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-[#8b6914] rounded-full border border-white"></span>
-                        )}
-                      </button>
-                      <button
-                        onClick={() => openModal(p)}
-                        className="p-2 text-[#6b6456] hover:text-[#8b6914] transition-colors inline-block"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(p.id)}
-                        className="p-2 transition-colors inline-block text-[#6b6456] hover:text-red-500"
-                        title="Hapus"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
+                    {userRole === 'ADMIN' && (
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => openImageModal(p)}
+                          className="p-2 text-[#6b6456] hover:text-[#8b6914] transition-colors inline-block relative"
+                          title="Kelola Foto"
+                        >
+                          <ImageIcon className="w-4 h-4" />
+                          {p.images?.length > 0 && (
+                            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-[#8b6914] rounded-full border border-white"></span>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => openModal(p)}
+                          className="p-2 text-[#6b6456] hover:text-[#8b6914] transition-colors inline-block"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(p.id)}
+                          className="p-2 transition-colors inline-block text-[#6b6456] hover:text-red-500"
+                          title="Hapus"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 );
               })}

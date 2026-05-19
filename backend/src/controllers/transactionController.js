@@ -40,9 +40,9 @@ const createTransaction = async (req, res) => {
     }
 
     // Use a transaction to ensure both records update correctly
-    const result = await prisma.$transaction(async (prisma) => {
+    const result = await prisma.$transaction(async (tx) => {
       // 1. Check current product
-      const product = await prisma.product.findUnique({
+      const product = await tx.product.findUnique({
         where: { id: parseInt(productId) },
       });
 
@@ -66,13 +66,13 @@ const createTransaction = async (req, res) => {
       }
 
       // 3. Update product stock
-      await prisma.product.update({
+      await tx.product.update({
         where: { id: parseInt(productId) },
         data: { stock: newStock },
       });
 
       // 4. Create transaction record
-      const transaction = await prisma.transaction.create({
+      const transaction = await tx.transaction.create({
         data: {
           type,
           productId: parseInt(productId),
@@ -93,7 +93,7 @@ const createTransaction = async (req, res) => {
       if (req.user.role === "STAFF") {
         const staffName = req.user.name || req.user.email;
         const typeText = type === "IN" ? "Stok Masuk" : type === "OUT" ? "Stok Keluar" : "Penyesuaian";
-        await prisma.notification.create({
+        await tx.notification.create({
           data: {
             title: `Aktivitas Staff: ${typeText}`,
             message: `${staffName} mencatat ${typeText} sebanyak ${quantity} ${transaction.product.unit} untuk produk "${transaction.product.name}".`,

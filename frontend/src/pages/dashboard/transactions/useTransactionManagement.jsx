@@ -7,6 +7,7 @@ export default function useTransactionManagement() {
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [validationError, setValidationError] = useState('');
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,17 +48,45 @@ export default function useTransactionManagement() {
     fetchData();
   }, []);
 
+  const validateFields = (data, type) => {
+    if (!data.productId) {
+      setValidationError('');
+      return;
+    }
+    const selectedProd = products.find(p => p.id === parseInt(data.productId));
+    const qty = parseInt(data.quantity);
+
+    if (data.quantity !== '' && (isNaN(qty) || qty <= 0)) {
+      setValidationError('Jumlah kuantitas harus lebih besar dari 0');
+      return;
+    }
+
+    if (type === 'OUT' && selectedProd && qty > selectedProd.stock) {
+      setValidationError(`Sistem menolak: Jumlah melebihi stok tersedia (${selectedProd.stock} ${selectedProd.unit})`);
+      return;
+    }
+
+    setValidationError('');
+  };
+
+  const updateFormData = (nextState) => {
+    const updated = typeof nextState === 'function' ? nextState(formData) : nextState;
+    setFormData(updated);
+    validateFields(updated, transactionType);
+  };
+
   const openModal = (type) => {
     setTransactionType(type);
     const tzoffset = (new Date()).getTimezoneOffset() * 60000;
     const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 16);
     setFormData({
-      productId: products.length > 0 ? products[0].id : '',
+      productId: '',
       quantity: '',
-      supplierId: type === 'IN' ? (suppliers.length > 0 ? suppliers[0].id : '') : '',
+      supplierId: '',
       notes: '',
       date: localISOTime
     });
+    setValidationError('');
     setIsModalOpen(true);
   };
 
@@ -69,6 +98,19 @@ export default function useTransactionManagement() {
     e.preventDefault();
     const token = localStorage.getItem('token');
     
+    // Final validation check
+    const qty = parseInt(formData.quantity);
+    if (isNaN(qty) || qty <= 0) {
+      setValidationError('Jumlah kuantitas harus lebih besar dari 0');
+      return;
+    }
+
+    const selectedProd = products.find(p => p.id === parseInt(formData.productId));
+    if (transactionType === 'OUT' && selectedProd && qty > selectedProd.stock) {
+      setValidationError(`Sistem menolak: Jumlah melebihi stok tersedia (${selectedProd.stock} ${selectedProd.unit})`);
+      return;
+    }
+
     try {
       const payload = {
         ...formData,
@@ -87,7 +129,7 @@ export default function useTransactionManagement() {
       closeModal();
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error processing transaction');
+      setValidationError(err.response?.data?.message || 'Error processing transaction');
     }
   };
 
@@ -97,10 +139,11 @@ export default function useTransactionManagement() {
     suppliers,
     loading,
     error,
+    validationError,
     isModalOpen,
     transactionType,
     formData,
-    setFormData,
+    setFormData: updateFormData,
     openModal,
     closeModal,
     handleSubmit

@@ -41,9 +41,9 @@ export default function Dashboard() {
         <div className="flex-1 overflow-auto p-8 lg:p-12 print:overflow-visible print:p-0 print:block">
           <Routes>
             <Route path="/" element={<DashboardHome user={user} />} />
-            <Route path="/users" element={<UserManagement />} />
-            <Route path="/categories" element={<CategoryManagement />} />
-            <Route path="/suppliers" element={<SupplierManagement />} />
+            <Route path="/users" element={user.role === 'ADMIN' ? <UserManagement /> : <div className="p-8 bg-white border border-red-200 text-red-700 rounded-sm">Akses Ditolak. Halaman ini hanya untuk Administrator.</div>} />
+            <Route path="/categories" element={user.role === 'ADMIN' ? <CategoryManagement /> : <div className="p-8 bg-white border border-red-200 text-red-700 rounded-sm">Akses Ditolak. Halaman ini hanya untuk Administrator.</div>} />
+            <Route path="/suppliers" element={user.role === 'ADMIN' ? <SupplierManagement /> : <div className="p-8 bg-white border border-red-200 text-red-700 rounded-sm">Akses Ditolak. Halaman ini hanya untuk Administrator.</div>} />
             <Route path="/products" element={<ProductManagement />} />
             <Route path="/transactions" element={<TransactionManagement />} />
             <Route path="/history" element={<HistoryManagement />} />

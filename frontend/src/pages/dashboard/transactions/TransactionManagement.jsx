@@ -9,6 +9,7 @@ export default function TransactionManagement() {
     suppliers,
     loading,
     error,
+    validationError,
     isModalOpen,
     transactionType,
     formData,
@@ -139,9 +140,18 @@ export default function TransactionManagement() {
                 >
                   <option value="" disabled>Pilih Produk</option>
                   {products.map(p => (
-                    <option key={p.id} value={p.id}>{p.name} (Stok: {p.stock} {p.unit})</option>
+                    <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
                 </select>
+                {formData.productId && (
+                  <div className="mt-2 text-xs text-[#6b6456]">
+                    Stok tersedia: <span className="font-bold text-[#0d0d0d]">{
+                      products.find(p => p.id === parseInt(formData.productId))?.stock ?? 0
+                    } {
+                      products.find(p => p.id === parseInt(formData.productId))?.unit ?? 'Pcs'
+                    }</span>
+                  </div>
+                )}
               </div>
 
               {transactionType === 'IN' && (
@@ -190,20 +200,39 @@ export default function TransactionManagement() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#6b6456] mb-2">Catatan / Keterangan</label>
-                <textarea
-                  rows="3"
-                  value={formData.notes}
-                  onChange={e => setFormData({...formData, notes: e.target.value})}
-                  className="w-full border border-[#0d0d0d]/10 rounded-sm px-4 py-3 text-sm focus:border-[#8b6914] focus:ring-1 focus:ring-[#8b6914] outline-none resize-none"
-                  placeholder={
-                    transactionType === 'IN' ? 'Faktur Pembelian No...' : 
-                    transactionType === 'OUT' ? 'Terjual ke...' : 
-                    'Barang rusak / sobek...'
-                  }
-                />
-              </div>
+              {transactionType === 'OUT' ? (
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#6b6456] mb-2">Tujuan *</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.notes || ''}
+                    onChange={e => setFormData({...formData, notes: e.target.value})}
+                    className="w-full border border-[#0d0d0d]/10 rounded-sm px-4 py-3 text-sm focus:border-[#8b6914] focus:ring-1 focus:ring-[#8b6914] outline-none"
+                    placeholder="Contoh: Toko Cabang A / Pembeli Retail"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#6b6456] mb-2">Catatan / Keterangan</label>
+                  <textarea
+                    rows="3"
+                    value={formData.notes || ''}
+                    onChange={e => setFormData({...formData, notes: e.target.value})}
+                    className="w-full border border-[#0d0d0d]/10 rounded-sm px-4 py-3 text-sm focus:border-[#8b6914] focus:ring-1 focus:ring-[#8b6914] outline-none resize-none"
+                    placeholder={
+                      transactionType === 'IN' ? 'Faktur Pembelian No...' : 
+                      'Barang rusak / sobek...'
+                    }
+                  />
+                </div>
+              )}
+
+              {validationError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-sm font-medium">
+                  {validationError}
+                </div>
+              )}
 
               <div className="pt-4 flex gap-3">
                 <button
@@ -215,7 +244,9 @@ export default function TransactionManagement() {
                 </button>
                 <button
                   type="submit"
+                  disabled={!!validationError}
                   className={`flex-1 px-4 py-3 text-white text-[11px] font-bold uppercase tracking-[0.2em] rounded-sm transition-colors ${
+                    validationError ? 'bg-gray-300 cursor-not-allowed text-gray-500' :
                     transactionType === 'IN' ? 'bg-green-600 hover:bg-green-700' :
                     transactionType === 'OUT' ? 'bg-red-600 hover:bg-red-700' :
                     'bg-[#0d0d0d] hover:bg-[#8b6914]'

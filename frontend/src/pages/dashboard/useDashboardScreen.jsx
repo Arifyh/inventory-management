@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  PackageSearch, 
-  ArrowRightLeft, 
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  PackageSearch,
+  ArrowRightLeft,
   Tags,
   Users,
   Truck,
-  History
-} from 'lucide-react';
+  History,
+} from "lucide-react";
 
 export default function useDashboardScreen() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -18,40 +18,58 @@ export default function useDashboardScreen() {
 
   useEffect(() => {
     // Check if user is logged in
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
     if (!token || !userData) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
-    
+
     setUser(JSON.parse(userData));
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   const navItems = [
-    { label: 'Ringkasan', icon: LayoutDashboard, path: '/dashboard', active: location.pathname === '/dashboard' },
-    { label: 'Katalog Produk', icon: PackageSearch, path: '/dashboard/products', active: location.pathname === '/dashboard/products' },
-    { label: 'Kategori', icon: Tags, path: '/dashboard/categories', active: location.pathname === '/dashboard/categories' },
-    { label: 'Supplier', icon: Truck, path: '/dashboard/suppliers', active: location.pathname === '/dashboard/suppliers' },
-    { label: 'Transaksi', icon: ArrowRightLeft, path: '/dashboard/transactions', active: location.pathname === '/dashboard/transactions' },
-    { label: 'Riwayat', icon: History, path: '/dashboard/history', active: location.pathname === '/dashboard/history' },
+    { label: "Ringkasan", icon: LayoutDashboard, path: "/dashboard" },
+    {
+      label: "Katalog Produk",
+      icon: PackageSearch,
+      path: "/dashboard/products",
+    },
   ];
 
-  if (user?.role === 'ADMIN') {
-    navItems.push({ icon: Users, label: 'Pengguna', path: '/dashboard/users' });
+  if (user?.role === "ADMIN") {
+    navItems.push(
+      { label: "Kategori", icon: Tags, path: "/dashboard/categories" },
+      { label: "Supplier", icon: Truck, path: "/dashboard/suppliers" },
+    );
+  }
+
+  navItems.push(
+    {
+      label: "Transaksi",
+      icon: ArrowRightLeft,
+      path: "/dashboard/transactions",
+    },
+    { label: "Riwayat", icon: History, path: "/dashboard/history" },
+  );
+
+  if (user?.role === "ADMIN") {
+    navItems.push({ icon: Users, label: "Pengguna", path: "/dashboard/users" });
   }
 
   // Set active state based on current path
-  const activeNavItems = navItems.map(item => ({
+  const activeNavItems = navItems.map((item) => ({
     ...item,
-    active: location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path))
+    active:
+      location.pathname === item.path ||
+      (item.path !== "/dashboard" && location.pathname.startsWith(item.path)),
   }));
 
   return {
@@ -59,6 +77,6 @@ export default function useDashboardScreen() {
     setIsSidebarOpen,
     user,
     navItems: activeNavItems,
-    handleLogout
+    handleLogout,
   };
 }
