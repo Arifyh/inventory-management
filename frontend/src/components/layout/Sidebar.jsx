@@ -8,7 +8,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, navItems, use
     <aside 
       className={`${
         isSidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full'
-      } fixed inset-y-0 left-0 z-50 bg-[#0d0d0d] text-white transition-all duration-300 ease-in-out md:relative font-sans border-r border-white/10 overflow-hidden whitespace-nowrap`}
+      } fixed inset-y-0 left-0 z-50 bg-[#0d0d0d] text-white transition-all duration-300 ease-in-out md:relative font-sans border-r border-white/10 overflow-hidden whitespace-nowrap print:hidden`}
     >
       <div className="w-64 h-full flex flex-col">
       <div className="p-8 flex items-center justify-between border-b border-white/10">

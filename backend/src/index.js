@@ -7,6 +7,7 @@ const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const supplierRoutes = require("./routes/supplierRoutes");
 const productRoutes = require("./routes/productRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
 const path = require('path');
 
 const app = express();
@@ -22,6 +23,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/suppliers", supplierRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 // Base route
 app.get("/", (req, res) => {

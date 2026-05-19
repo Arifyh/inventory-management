@@ -9,6 +9,8 @@ import UserManagement from './users/UserManagement';
 import CategoryManagement from './categories/CategoryManagement';
 import SupplierManagement from './suppliers/SupplierManagement';
 import ProductManagement from './products/ProductManagement';
+import TransactionManagement from './transactions/TransactionManagement';
+import HistoryManagement from './history/HistoryManagement';
 
 export default function Dashboard() {
   const {
@@ -22,7 +24,7 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#f5f0e8] flex font-sans">
+    <div className="min-h-screen bg-[#f5f0e8] flex font-sans print:bg-white print:block">
       <Sidebar 
         isSidebarOpen={isSidebarOpen} 
         setIsSidebarOpen={setIsSidebarOpen} 
@@ -32,17 +34,19 @@ export default function Dashboard() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden print:overflow-visible print:block">
         <Topbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
         {/* Dashboard Content */}
-        <div className="flex-1 overflow-auto p-8 lg:p-12">
+        <div className="flex-1 overflow-auto p-8 lg:p-12 print:overflow-visible print:p-0 print:block">
           <Routes>
             <Route path="/" element={<DashboardHome user={user} />} />
             <Route path="/users" element={<UserManagement />} />
             <Route path="/categories" element={<CategoryManagement />} />
             <Route path="/suppliers" element={<SupplierManagement />} />
             <Route path="/products" element={<ProductManagement />} />
+            <Route path="/transactions" element={<TransactionManagement />} />
+            <Route path="/history" element={<HistoryManagement />} />
           </Routes>
         </div>
       </main>

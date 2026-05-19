@@ -3,7 +3,7 @@ import { Menu, Bell } from "lucide-react";
 
 export default function Topbar({ isSidebarOpen, setIsSidebarOpen }) {
   return (
-    <header className="bg-[#f5f0e8] border-b border-[#0d0d0d]/10 sticky top-0 z-40">
+    <header className="bg-[#f5f0e8] border-b border-[#0d0d0d]/10 sticky top-0 z-40 print:hidden">
       <div className="flex items-center justify-between px-8 py-5">
         <div className="flex items-center gap-4">
           <button

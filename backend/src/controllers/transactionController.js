@@ -1,0 +1,109 @@
+const prisma = require("../utils/prisma");
+
+const getTransactions = async (req, res) => {
+  try {
+    const transactions = await prisma.transaction.findMany({
+      include: {
+        product: { select: { name: true, sku: true, unit: true } },
+        supplier: { select: { name: true } },
+        user: { select: { name: true, email: true } },
+      },
+      orderBy: { date: "desc" },
+    });
+    res.json(transactions);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching transactions", error: error.message });
+  }
+};
+
+const createTransaction = async (req, res) => {
+  try {
+    const { type, productId, quantity, supplierId, notes, date } = req.body;
+    const userId = req.user.id; // from auth middleware
+
+    if (!type || !productId || !quantity || quantity <= 0) {
+      return res
+        .status(400)
+        .json({ message: "Type, product, and valid quantity are required" });
+    }
+
+    if (type !== "IN" && type !== "OUT" && type !== "ADJUSTMENT") {
+      return res.status(400).json({ message: "Invalid transaction type" });
+    }
+
+    if (type === "IN" && !supplierId) {
+      return res
+        .status(400)
+        .json({ message: "Supplier is required for Stock In" });
+    }
+
+    // Use a transaction to ensure both records update correctly
+    const result = await prisma.$transaction(async (prisma) => {
+      // 1. Check current product
+      const product = await prisma.product.findUnique({
+        where: { id: parseInt(productId) },
+      });
+
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      // 2. Calculate new stock
+      let newStock = product.stock;
+      if (type === "IN") {
+        newStock += parseInt(quantity);
+      } else if (type === "OUT") {
+        if (product.stock < parseInt(quantity)) {
+          throw new Error(
+            `Insufficient stock. Current stock is ${product.stock}`,
+          );
+        }
+        newStock -= parseInt(quantity);
+      } else if (type === "ADJUSTMENT") {
+        newStock += parseInt(quantity);
+      }
+
+      // 3. Update product stock
+      await prisma.product.update({
+        where: { id: parseInt(productId) },
+        data: { stock: newStock },
+      });
+
+      // 4. Create transaction record
+      const transaction = await prisma.transaction.create({
+        data: {
+          type,
+          productId: parseInt(productId),
+          quantity: parseInt(quantity),
+          supplierId: supplierId ? parseInt(supplierId) : null,
+          userId: parseInt(userId),
+          notes,
+          date: date ? new Date(date) : undefined,
+        },
+        include: {
+          product: { select: { name: true, sku: true, unit: true } },
+          supplier: { select: { name: true } },
+          user: { select: { name: true, email: true } },
+        },
+      });
+
+      return transaction;
+    });
+
+    res
+      .status(201)
+      .json({
+        message: "Transaction created successfully",
+        transaction: result,
+      });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  getTransactions,
+  createTransaction,
+};
