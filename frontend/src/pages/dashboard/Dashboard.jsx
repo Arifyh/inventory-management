@@ -35,7 +35,7 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden print:overflow-visible print:block">
-        <Topbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+        <Topbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} user={user} />
 
         {/* Dashboard Content */}
         <div className="flex-1 overflow-auto p-8 lg:p-12 print:overflow-visible print:p-0 print:block">

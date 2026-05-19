@@ -89,6 +89,19 @@ const createTransaction = async (req, res) => {
         },
       });
 
+      // 5. Create notification for admin if transaction is triggered by STAFF
+      if (req.user.role === "STAFF") {
+        const staffName = req.user.name || req.user.email;
+        const typeText = type === "IN" ? "Stok Masuk" : type === "OUT" ? "Stok Keluar" : "Penyesuaian";
+        await prisma.notification.create({
+          data: {
+            title: `Aktivitas Staff: ${typeText}`,
+            message: `${staffName} mencatat ${typeText} sebanyak ${quantity} ${transaction.product.unit} untuk produk "${transaction.product.name}".`,
+            type: "TRANSACTION",
+          },
+        });
+      }
+
       return transaction;
     });
 
