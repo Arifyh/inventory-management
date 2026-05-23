@@ -115,9 +115,46 @@ const toggleUserStatus = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Admin cannot delete themselves
+    if (parseInt(id) === req.user.id) {
+      return res.status(400).json({ message: 'You cannot delete your own account' });
+    }
+
+    const user = await prisma.user.findUnique({ 
+      where: { id: parseInt(id) },
+      include: {
+        _count: {
+          select: { transactions: true }
+        }
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user._count.transactions > 0) {
+      return res.status(400).json({ message: 'Gagal menghapus: Pengguna ini memiliki riwayat transaksi. Silakan nonaktifkan statusnya saja.' });
+    }
+
+    await prisma.user.delete({
+      where: { id: parseInt(id) }
+    });
+
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting user', error: error.message });
+  }
+};
+
 module.exports = {
   getUsers,
   createUser,
   updateUser,
-  toggleUserStatus
+  toggleUserStatus,
+  deleteUser
 };

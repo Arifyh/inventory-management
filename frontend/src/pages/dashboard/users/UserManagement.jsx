@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Edit2, ShieldAlert, CheckCircle2, XCircle } from 'lucide-react';
+import { Plus, Edit2, ShieldAlert, CheckCircle2, XCircle, Trash } from 'lucide-react';
 import useUserManagement from './useUserManagement';
 
 export default function UserManagement() {
@@ -14,7 +14,8 @@ export default function UserManagement() {
     openModal,
     closeModal,
     handleSubmit,
-    toggleStatus
+    toggleStatus,
+    deleteUser
   } = useUserManagement();
 
   if (loading) return <div className="p-8 text-[#6b6456]">Memuat data...</div>;
@@ -86,6 +87,13 @@ export default function UserManagement() {
                     title={u.isActive ? "Nonaktifkan" : "Aktifkan"}
                   >
                     <ShieldAlert className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => deleteUser(u.id)}
+                    className="p-2 ml-2 text-[#6b6456] hover:text-red-600 transition-colors inline-block"
+                    title="Hapus"
+                  >
+                    <Trash className="w-4 h-4" />
                   </button>
                 </td>
               </tr>

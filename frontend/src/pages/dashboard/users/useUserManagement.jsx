@@ -100,6 +100,20 @@ export default function useUserManagement() {
     }
   };
 
+  const deleteUser = async (id) => {
+    if (!window.confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) return;
+    
+    const token = localStorage.getItem('token');
+    try {
+      await axios.delete(`http://localhost:5000/api/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchUsers();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Error deleting user');
+    }
+  };
+
   return {
     users,
     loading,
@@ -111,6 +125,7 @@ export default function useUserManagement() {
     openModal,
     closeModal,
     handleSubmit,
-    toggleStatus
+    toggleStatus,
+    deleteUser
   };
 }

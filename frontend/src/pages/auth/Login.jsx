@@ -99,7 +99,7 @@ export default function LoginScreen() {
           {/* Badge */}
           <div className="mb-8 inline-flex items-center gap-2 border border-[#8b6914]/20 bg-[#8b6914]/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#8b6914]">
             <div className="h-1.5 w-1.5 rounded-full bg-[#8b6914]" />
-            Admin & Staff Access
+            Akses Admin & Staff
           </div>
 
           {/* Header */}
