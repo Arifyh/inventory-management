@@ -23,10 +23,19 @@ const createTransaction = async (req, res) => {
     const { type, productId, quantity, supplierId, notes, date } = req.body;
     const userId = req.user.id; // from auth middleware
 
-    if (!type || !productId || !quantity || quantity <= 0) {
+    if (!type || !productId || quantity === undefined || quantity === null || quantity === "") {
       return res
         .status(400)
         .json({ message: "Type, product, and valid quantity are required" });
+    }
+
+    const parsedQuantity = parseInt(quantity);
+    if (isNaN(parsedQuantity) || parsedQuantity === 0) {
+      return res.status(400).json({ message: "Quantity cannot be zero or invalid" });
+    }
+
+    if (type !== "ADJUSTMENT" && parsedQuantity < 0) {
+      return res.status(400).json({ message: "Quantity must be greater than zero" });
     }
 
     if (type !== "IN" && type !== "OUT" && type !== "ADJUSTMENT") {
@@ -63,6 +72,9 @@ const createTransaction = async (req, res) => {
         newStock -= parseInt(quantity);
       } else if (type === "ADJUSTMENT") {
         newStock += parseInt(quantity);
+        if (newStock < 0) {
+          throw new Error(`Insufficient stock. Adjustment results in negative stock (${newStock}). Current stock is ${product.stock}`);
+        }
       }
 
       // 3. Update product stock
