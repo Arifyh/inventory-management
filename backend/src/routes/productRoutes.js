@@ -4,7 +4,11 @@ const productController = require('../controllers/productController');
 const { authenticate, authorize } = require('../middlewares/auth');
 const upload = require('../middlewares/upload');
 
-// Require authentication for all routes
+// Public routes for visitors
+router.get('/public', productController.getPublicProducts);
+router.get('/public/:id', productController.getPublicProductById);
+
+// Require authentication for all routes below
 router.use(authenticate);
 
 // Staff and Admin can view products

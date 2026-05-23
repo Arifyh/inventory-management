@@ -9,6 +9,7 @@ The application supports three levels of access (Roles): **Admin**, **Staff**, a
 ## 🏛️ Tech Stack
 
 ### Frontend
+
 - **Framework & Build Tool:** React (v19) & Vite
 - **Styling:** Tailwind CSS (v4)
 - **Icons:** Lucide React
@@ -16,6 +17,7 @@ The application supports three levels of access (Roles): **Admin**, **Staff**, a
 - **Routing:** React Router DOM (v7)
 
 ### Backend
+
 - **Runtime & Framework:** Node.js & Express.js
 - **Database ORM:** Prisma ORM
 - **Database Engine:** MySQL
@@ -26,20 +28,20 @@ The application supports three levels of access (Roles): **Admin**, **Staff**, a
 
 ## 👥 Roles & Main Features
 
-| Feature / Module | Admin | Staff | Visitor (Public) |
-| :--- | :---: | :---: | :---: |
-| **View Public Catalog** | ✅ | ✅ | ✅ (No Login Required) |
-| **View Material Details** | ✅ | ✅ | ✅ (No Login Required) |
-| **Inquiry via WhatsApp** | ✅ | ✅ | ✅ (No Login Required) |
-| **Dashboard & Statistics** | ✅ | ✅ | ❌ |
-| **Log Stock Transactions (In/Out)** | ✅ | ✅ | ❌ |
-| **View Stock Transaction History** | ✅ | ✅ | ❌ |
-| **CRUD Products & Upload Photos** | ✅ | ❌ | ❌ |
-| **CRUD Material Categories** | ✅ | ❌ | ❌ |
-| **CRUD Suppliers** | ✅ | ❌ | ❌ |
-| **Publish / Unpublish Products** | ✅ | ❌ | ❌ |
-| **Manage Users & Roles** | ✅ | ❌ | ❌ |
-| **Activity Audit Logs** | ✅ | ❌ | ❌ |
+| Feature / Module                    | Admin | Staff |    Visitor (Public)    |
+| :---------------------------------- | :---: | :---: | :--------------------: |
+| **View Public Catalog**             |  ✅   |  ✅   | ✅ (No Login Required) |
+| **View Material Details**           |  ✅   |  ✅   | ✅ (No Login Required) |
+| **Inquiry via WhatsApp**            |  ✅   |  ✅   | ✅ (No Login Required) |
+| **Dashboard & Statistics**          |  ✅   |  ✅   |           ❌           |
+| **Log Stock Transactions (In/Out)** |  ✅   |  ✅   |           ❌           |
+| **View Stock Transaction History**  |  ✅   |  ✅   |           ❌           |
+| **CRUD Products & Upload Photos**   |  ✅   |  ❌   |           ❌           |
+| **CRUD Material Categories**        |  ✅   |  ❌   |           ❌           |
+| **CRUD Suppliers**                  |  ✅   |  ❌   |           ❌           |
+| **Publish / Unpublish Products**    |  ✅   |  ❌   |           ❌           |
+| **Manage Users & Roles**            |  ✅   |  ❌   |           ❌           |
+| **Activity Audit Logs**             |  ✅   |  ❌   |           ❌           |
 
 ---
 
@@ -80,18 +82,22 @@ sistem-inventory/
 ## 🛠️ Installation & Configuration
 
 ### 1. Prerequisites
+
 Ensure you have the following installed:
+
 - Node.js (v18 or higher)
 - MySQL database server
 - Git
 
 ### 2. Clone the Repository
+
 ```bash
 git clone https://github.com/Arifyh/system-inventory.git
 cd system-inventory
 ```
 
 ### 3. Configure the Backend (`backend/`)
+
 1. Navigate to the backend directory:
    ```bash
    cd backend
@@ -110,9 +116,10 @@ cd system-inventory
    ```bash
    npx prisma db push
    ```
-   *(Optional)* If you require initial seeds, register or insert seed files accordingly to set up the default Administrator user.
+   _(Optional)_ If you require initial seeds, register or insert seed files accordingly to set up the default Administrator user.
 
 ### 4. Configure the Frontend (`frontend/`)
+
 1. Navigate to the frontend directory:
    ```bash
    cd ../frontend
@@ -136,7 +143,7 @@ You can run both the backend server and the frontend client concurrently from th
    ```bash
    npm run dev
    ```
-   *This command will run:*
+   _This command will run:_
    - Backend API Server at: `http://localhost:5000`
    - Frontend Vite Client at: `http://localhost:5173`
 
@@ -147,14 +154,17 @@ Open your web browser and navigate to `http://localhost:5173/` to view the publi
 ## 🔌 Essential API Endpoints
 
 ### Public Endpoints (No Authentication Required)
+
 - **`GET /api/products/public`** : Returns all active and published products (`isPublished: true`).
 - **`GET /api/products/public/:id`** : Returns details of a specific public product by its ID.
 - **`GET /api/categories/public`** : Returns a list of categories for filter dropdowns.
 
 ### Authentication
+
 - **`POST /api/auth/login`** : Log in Admin or Staff users, returning a JWT token.
 
 ### Private Management Endpoints (Requires Bearer JWT Token)
+
 - **`GET /api/products`** : Returns all products (including unpublished drafts) for inventory tracking.
 - **`POST /api/products`** : Creates a new material product (Admin only).
 - **`POST /api/transactions`** : Records a stock movement mutator, e.g., incoming (`IN`) or outgoing (`OUT`) (Admin & Staff).
@@ -163,12 +173,14 @@ Open your web browser and navigate to `http://localhost:5173/` to view the publi
 ---
 
 ## 📲 WhatsApp Redirection Integration
+
 When a public visitor clicks the **"Tanya WA"** or **"Hubungi WA"** buttons, they are redirected to Ikonik Architecture's WhatsApp contact:
-- **WhatsApp Contact Number:** `+62 812-2556-8998` (cleaned and formatted as `6281225568998` for the WhatsApp URL)
+
 - **Automated Message Format:**
+
   ```text
   Halo Toko Material, saya ingin bertanya tentang produk berikut:
-      
+
   *[Product Name]*
   SKU: [SKU Code]
   Category: [Category]

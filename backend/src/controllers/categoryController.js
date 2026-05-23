@@ -115,9 +115,21 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+const getPublicCategories = async (req, res) => {
+  try {
+    const categories = await prisma.category.findMany();
+    res.json(categories);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching public categories", error: error.message });
+  }
+};
+
 module.exports = {
   getCategories,
   createCategory,
   updateCategory,
   deleteCategory,
+  getPublicCategories,
 };

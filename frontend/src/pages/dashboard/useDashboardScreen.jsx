@@ -64,7 +64,6 @@ export default function useDashboardScreen() {
     navItems.push({ icon: Users, label: "Pengguna", path: "/dashboard/users" });
   }
 
-  // Set active state based on current path
   const activeNavItems = navItems.map((item) => ({
     ...item,
     active:

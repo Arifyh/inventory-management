@@ -3,6 +3,9 @@ const router = express.Router();
 const categoryController = require('../controllers/categoryController');
 const { authenticate, authorize } = require('../middlewares/auth');
 
+// Public route for visitors
+router.get('/public', categoryController.getPublicCategories);
+
 router.use(authenticate);
 
 // Staff and Admin can view categories
