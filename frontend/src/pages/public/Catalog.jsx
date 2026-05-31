@@ -5,6 +5,7 @@ import {
   Tag,
   Phone,
   Lock,
+  User,
   X,
   ImageOff,
   Layers,
@@ -28,6 +29,8 @@ export default function Catalog() {
     closeProductDetail,
     handleWhatsAppRedirect,
     handleLoginRedirect,
+    currentUser,
+    handleDashboardRedirect,
   } = useCatalogScreen();
 
   const getProductThumbnail = (product) => {
@@ -61,13 +64,23 @@ export default function Catalog() {
             </div>
           </div>
 
-          {/* <button
-            onClick={handleLoginRedirect}
-            className="group flex items-center gap-2 border border-[#0d0d0d] hover:bg-[#0d0d0d] hover:text-white px-4 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300"
-          >
-            <Lock className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-            Portal Staff
-          </button> */}
+          {currentUser ? (
+            <button
+              onClick={handleDashboardRedirect}
+              className="group flex items-center gap-2 border border-[#8b6914] bg-[#8b6914]/5 hover:bg-[#8b6914] hover:text-white px-4 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 cursor-pointer text-[#8b6914]"
+            >
+              <User className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+              Dashboard Saya ({currentUser.name || 'User'})
+            </button>
+          ) : (
+            <button
+              onClick={handleLoginRedirect}
+              className="group flex items-center gap-2 border border-[#0d0d0d] hover:bg-[#0d0d0d] hover:text-white px-4 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 cursor-pointer"
+            >
+              <Lock className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+              Masuk / Daftar
+            </button>
+          )}
         </div>
       </header>
 

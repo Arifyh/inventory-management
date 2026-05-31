@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-export default function useLoginScreen() {
+
+export default function useRegisterScreen() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [errors, setErrors] = useState({
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
     general: "",
   });
 
@@ -21,20 +25,32 @@ export default function useLoginScreen() {
 
   const validateForm = () => {
     const newErrors = {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
       general: "",
     };
 
     let valid = true;
+
+    if (!name.trim()) {
+      newErrors.name = "Nama lengkap tidak boleh kosong.";
+      valid = false;
+    }
 
     if (!validateEmail(email)) {
       newErrors.email = "Masukkan alamat email yang valid.";
       valid = false;
     }
 
-    if (!password.trim()) {
-      newErrors.password = "Password tidak boleh kosong.";
+    if (password.length < 6) {
+      newErrors.password = "Password minimal harus 6 karakter.";
+      valid = false;
+    }
+
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Konfirmasi password tidak cocok.";
       valid = false;
     }
 
@@ -52,26 +68,19 @@ export default function useLoginScreen() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      await axios.post("http://localhost:5000/api/auth/register", {
+        name,
         email,
-        password
+        password,
       });
 
-      const { token, user } = response.data;
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-
-      if (user.role === 'VISITOR') {
-        navigate('/visitor/dashboard');
-      } else {
-        navigate('/dashboard');
-      }
+      navigate("/login", { state: { registered: true } });
     } catch (error) {
       setErrors((prev) => ({
         ...prev,
         general:
-          error.response?.data?.message || 'Terjadi kesalahan pada server. Silakan coba lagi.'
+          error.response?.data?.message ||
+          "Terjadi kesalahan saat mendaftar. Silakan coba lagi.",
       }));
     } finally {
       setLoading(false);
@@ -79,12 +88,14 @@ export default function useLoginScreen() {
   };
 
   return {
+    name,
+    setName,
     email,
     setEmail,
     password,
     setPassword,
-    remember,
-    setRemember,
+    confirmPassword,
+    setConfirmPassword,
     showPassword,
     setShowPassword,
     loading,
