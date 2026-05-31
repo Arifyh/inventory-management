@@ -4,7 +4,7 @@ const prisma = require('../utils/prisma');
 
 const register = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password, name } = req.body;
 
     const existingUser = await prisma.user.findUnique({
       where: { email }
@@ -19,12 +19,13 @@ const register = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         email,
+        name: name || null,
         password: hashedPassword,
-        role: role || 'STAFF'
+        role: 'VISITOR'
       }
     });
 
-    res.status(201).json({ message: 'User registered successfully', user: { id: user.id, email: user.email, role: user.role } });
+    res.status(201).json({ message: 'User registered successfully', user: { id: user.id, email: user.email, name: user.name, role: user.role } });
   } catch (error) {
     res.status(500).json({ message: 'Error registering user', error: error.message });
   }

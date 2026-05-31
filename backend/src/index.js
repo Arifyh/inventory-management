@@ -46,4 +46,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Trigger reload for Prisma client regeneration
+// Trigger reload for Prisma client regeneration after adding VISITOR role

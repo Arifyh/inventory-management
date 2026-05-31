@@ -36,8 +36,29 @@ export default function useCatalogScreen() {
     fetchCatalogData();
   }, []);
 
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setCurrentUser(JSON.parse(storedUser));
+      } catch (err) {
+        console.error('Error parsing stored user:', err);
+      }
+    }
+  }, []);
+
   const handleLoginRedirect = () => {
     window.location.href = '/login';
+  };
+
+  const handleDashboardRedirect = () => {
+    if (currentUser?.role === 'VISITOR') {
+      window.location.href = '/visitor/dashboard';
+    } else {
+      window.location.href = '/dashboard';
+    }
   };
 
   const filteredProducts = useMemo(() => {
@@ -100,6 +121,8 @@ Apakah produk ini ready untuk dipesan?`;
     openProductDetail,
     closeProductDetail,
     handleWhatsAppRedirect,
-    handleLoginRedirect
+    handleLoginRedirect,
+    currentUser,
+    handleDashboardRedirect
   };
 }
