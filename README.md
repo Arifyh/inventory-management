@@ -33,7 +33,9 @@ The application supports three levels of access (Roles): **Admin**, **Staff**, a
 | **View Public Catalog**             |  ✅   |  ✅   | ✅ (No Login Required) |
 | **View Material Details**           |  ✅   |  ✅   | ✅ (No Login Required) |
 | **Inquiry via WhatsApp**            |  ✅   |  ✅   | ✅ (No Login Required) |
-| **Dashboard & Statistics**          |  ✅   |  ✅   |           ❌           |
+| **Visitor Login & Registration**    |  ❌   |  ❌   |           ✅           |
+| **Visitor Dashboard & Profile**     |  ❌   |  ❌   |           ✅           |
+| **Admin Dashboard & Statistics**    |  ✅   |  ✅   |           ❌           |
 | **Log Stock Transactions (In/Out)** |  ✅   |  ✅   |           ❌           |
 | **View Stock Transaction History**  |  ✅   |  ✅   |           ❌           |
 | **CRUD Products & Upload Photos**   |  ✅   |  ❌   |           ❌           |
@@ -161,7 +163,8 @@ Open your web browser and navigate to `http://localhost:5173/` to view the publi
 
 ### Authentication
 
-- **`POST /api/auth/login`** : Log in Admin or Staff users, returning a JWT token.
+- **`POST /api/auth/login`** : Log in Admin, Staff, or Visitor users, returning a JWT token.
+- **`POST /api/auth/register`** : Register a new Visitor account.
 
 ### Private Management Endpoints (Requires Bearer JWT Token)
 

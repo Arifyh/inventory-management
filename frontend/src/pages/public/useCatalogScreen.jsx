@@ -77,24 +77,7 @@ export default function useCatalogScreen() {
     });
   }, [products, searchQuery, selectedCategoryId]);
 
-  // WhatsApp redirection
-  const handleWhatsAppRedirect = (product) => {
-    const phoneNumber = "6287813511027";
-    const priceFormatted = parseFloat(product.price).toLocaleString('id-ID');
 
-    const message = `Halo Toko Material, saya ingin bertanya tentang produk berikut:
-    
-*${product.name}*
-SKU: ${product.sku}
-Kategori: ${product.category?.name || '-'}
-Harga: Rp ${priceFormatted} / ${product.unit}
-Status: ${product.stock > 0 ? 'Tersedia' : 'Habis'}
-
-Apakah produk ini ready untuk dipesan?`;
-
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
-  };
 
   const openProductDetail = (product) => {
     setSelectedProduct(product);
@@ -120,7 +103,6 @@ Apakah produk ini ready untuk dipesan?`;
     setActiveImageIndex,
     openProductDetail,
     closeProductDetail,
-    handleWhatsAppRedirect,
     handleLoginRedirect,
     currentUser,
     handleDashboardRedirect

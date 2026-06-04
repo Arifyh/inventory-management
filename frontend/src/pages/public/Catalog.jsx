@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import useCatalogScreen from "./useCatalogScreen";
+import { CartContext } from "../../context/CartContext";
 import {
   Search,
   Tag,
@@ -10,6 +12,8 @@ import {
   ImageOff,
   Layers,
   ArrowRight,
+  ShoppingCart,
+  Plus
 } from "lucide-react";
 
 export default function Catalog() {
@@ -27,11 +31,12 @@ export default function Catalog() {
     setActiveImageIndex,
     openProductDetail,
     closeProductDetail,
-    handleWhatsAppRedirect,
     handleLoginRedirect,
     currentUser,
     handleDashboardRedirect,
   } = useCatalogScreen();
+
+  const { addToCart, cartCount } = useContext(CartContext);
 
   const getProductThumbnail = (product) => {
     if (!product.images || product.images.length === 0) return null;
@@ -64,23 +69,34 @@ export default function Catalog() {
             </div>
           </div>
 
-          {currentUser ? (
-            <button
-              onClick={handleDashboardRedirect}
-              className="group flex items-center gap-2 border border-[#8b6914] bg-[#8b6914]/5 hover:bg-[#8b6914] hover:text-white px-4 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 cursor-pointer text-[#8b6914]"
-            >
-              <User className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-              Dashboard Saya ({currentUser.name || 'User'})
-            </button>
-          ) : (
-            <button
-              onClick={handleLoginRedirect}
-              className="group flex items-center gap-2 border border-[#0d0d0d] hover:bg-[#0d0d0d] hover:text-white px-4 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 cursor-pointer"
-            >
-              <Lock className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-              Masuk / Daftar
-            </button>
-          )}
+          <div className="flex items-center gap-4">
+            <Link to="/cart" className="relative p-2 text-[#0d0d0d] hover:text-[#8b6914] transition-colors">
+              <ShoppingCart className="w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 h-4 w-4 bg-[#8b6914] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
+            {currentUser ? (
+              <button
+                onClick={handleDashboardRedirect}
+                className="group flex items-center gap-2 border border-[#8b6914] bg-[#8b6914]/5 hover:bg-[#8b6914] hover:text-white px-4 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 cursor-pointer text-[#8b6914]"
+              >
+                <User className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                Dashboard Saya ({currentUser.name || 'User'})
+              </button>
+            ) : (
+              <button
+                onClick={handleLoginRedirect}
+                className="group flex items-center gap-2 border border-[#0d0d0d] hover:bg-[#0d0d0d] hover:text-white px-4 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 cursor-pointer"
+              >
+                <Lock className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                Masuk / Daftar
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -294,11 +310,16 @@ export default function Catalog() {
                           Detail
                         </button>
                         <button
-                          onClick={() => handleWhatsAppRedirect(product)}
-                          className="w-full inline-flex items-center justify-center gap-1.5 bg-[#16a34a] hover:bg-[#15803d] text-white py-2 rounded-sm text-[9px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                          onClick={() => isAvailable ? addToCart(product) : null}
+                          disabled={!isAvailable}
+                          className={`w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-sm text-[9px] font-bold uppercase tracking-wider transition-colors ${
+                            isAvailable 
+                              ? "bg-[#0d0d0d] hover:bg-[#8b6914] text-white cursor-pointer" 
+                              : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          }`}
                         >
-                          <Phone className="w-3 h-3 fill-white" />
-                          Tanya WA
+                          <Plus className="w-3 h-3" />
+                          Keranjang
                         </button>
                       </div>
                     </div>
@@ -448,11 +469,16 @@ export default function Catalog() {
                   Tutup Katalog
                 </button>
                 <button
-                  onClick={() => handleWhatsAppRedirect(selectedProduct)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 bg-[#16a34a] hover:bg-[#15803d] text-white py-3 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-colors cursor-pointer"
+                  onClick={() => selectedProduct.stock > 0 ? addToCart(selectedProduct) : null}
+                  disabled={selectedProduct.stock <= 0}
+                  className={`flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] transition-colors ${
+                    selectedProduct.stock > 0
+                      ? "bg-[#0d0d0d] hover:bg-[#8b6914] text-white cursor-pointer"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
                 >
-                  <Phone className="w-4 h-4 fill-white" />
-                  Hubungi WA
+                  <Plus className="w-4 h-4" />
+                  Tambah ke Keranjang
                 </button>
               </div>
             </div>

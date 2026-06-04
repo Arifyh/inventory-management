@@ -22,6 +22,7 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
+  orders       Order[]
 }
 
 model Category {
@@ -60,6 +61,7 @@ model Product {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   transactions Transaction[]
+  orderItems   OrderItem[]
 }
 
 model ProductImage {
@@ -101,4 +103,40 @@ model Notification {
   type        String   @default("TRANSACTION")
   isRead      Boolean  @default(false)
   createdAt   DateTime @default(now())
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+model Order {
+  id            Int           @id @default(autoincrement())
+  orderNumber   String?       @unique @default(uuid())
+  userId        Int
+  user          User          @relation(fields: [userId], references: [id])
+  status        OrderStatus   @default(PENDING)
+  totalAmount   Decimal       @default(0.0)
+  shippingAddress String?     @db.Text
+  notes         String?       @db.Text
+  paymentProof  String?
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now()) @updatedAt
+}
+
+model OrderItem {
+  id          Int      @id @default(autoincrement())
+  orderId     Int
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   Int
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity    Int
+  price       Decimal
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }
